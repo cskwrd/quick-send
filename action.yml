@@ -1,6 +1,6 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'QuickSend File Transfer'
+description: 'Need to run tests in production? Tired of finding your files here when you need them there? Fear not! The QuickSend GitHub Action sends your things when and where you need them.'
+author: 'cskwrd'
 inputs:
   milliseconds: # change this
     required: true
