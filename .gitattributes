@@ -1,1 +1,13 @@
 dist/** -diff linguist-generated=true 
+
+# Let Git decide what to do, for every file.
+* text=auto
+
+# Overwrite the above and declare files that will always have
+# LF line endings on checkin and checkout.
+# No ESLint/Prettier issues for those files.
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
