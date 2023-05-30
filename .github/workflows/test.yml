@@ -36,7 +36,7 @@ jobs:
           # configure smtp
           mv ${{ github.workspace }}/haraka/config/smtp.ini ${{ github.workspace }}/haraka/config/smtp.ini.orig
           cat <<SMTP > ${{ github.workspace }}/haraka/config/smtp.ini
-          listen=127.1.2.3:2525
+          listen=[::0]:2525
           [headers]
           max_lines=1000
           max_received=100
@@ -85,9 +85,9 @@ jobs:
 
       - uses: ./
         with:
-          protocol: 'smtps'
-          remote-host: 'smtp-relay.gmail.com'
-          remote-port: 465
+          protocol: 'smtp'
+          remote-host: '::1'
+          remote-port: 2525
           username: 'use-secret-user-in-production'
           password: 'use-secret-pass-in-production'
           smtp-from: 'tx@example.com'
