@@ -85,6 +85,13 @@ jobs:
           sudo systemctl start haraka
           sleep 1 # ensure haraka has time to start before running test
 
+      - name: Create test output files
+        run: |
+          mkdir -p ${{ github.workspace }}/output/sub-dir
+          echo "Hello" > ${{ github.workspace }}/output/hello.txt
+          echo "world" > ${{ github.workspace }}/output/sub-dir/world.csv
+          sleep 1 # ensure files are written before running test
+
       - uses: ./
         with:
           protocol: 'smtp'
@@ -122,7 +129,7 @@ jobs:
           fi
 
       - name: Setup tmate session
-        if: ${{ failure() }}
+        # if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
 
 #grep -q "tx@example.com" /tmp/mail.eml && grep -q "rx@example.com" /tmp/mail.eml || (echo fail && exit 1)
