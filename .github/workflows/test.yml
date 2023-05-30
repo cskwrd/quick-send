@@ -129,7 +129,7 @@ jobs:
           fi
 
       - name: Setup tmate session
-        # if: ${{ failure() }}
+        if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
 
 #grep -q "tx@example.com" /tmp/mail.eml && grep -q "rx@example.com" /tmp/mail.eml || (echo fail && exit 1)
