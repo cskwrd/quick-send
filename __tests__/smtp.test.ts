@@ -1,3 +1,4 @@
+import { Endpoint } from '../src/classes'
 import {smtp} from '../src/smtp'
 import * as process from 'process'
 import * as cp from 'child_process'
@@ -9,7 +10,7 @@ describe("required inputs", () => {
     test('throws invalid number', async () => {
       const server = 'some.server'
       const port = parseInt('foo', 10)
-      await expect(smtp(false, server, port, "username", "password", "from", "to")).rejects.toThrow('port not a number')
+      await expect(smtp(false, new Endpoint(server, port), "username", "password", {})).rejects.toThrow('port not a number')
     })
   })
 })
