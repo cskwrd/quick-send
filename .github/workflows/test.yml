@@ -83,9 +83,6 @@ jobs:
       - name: Start Haraka
         run: sudo systemctl start haraka
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-
       - uses: ./
         with:
           protocol: 'smtp'
@@ -121,5 +118,9 @@ jobs:
             echo "::error ::Resulting email appears incorrect. (BODY)"
             exit 1
           fi
+
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
 
 #grep -q "tx@example.com" /tmp/mail.eml && grep -q "rx@example.com" /tmp/mail.eml || (echo fail && exit 1)
