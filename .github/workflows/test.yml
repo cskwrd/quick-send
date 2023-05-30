@@ -83,6 +83,9 @@ jobs:
       - name: Start Haraka
         run: sudo systemctl start haraka
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+
       - uses: ./
         with:
           protocol: 'smtp'
