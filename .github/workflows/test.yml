@@ -123,7 +123,7 @@ jobs:
             echo "::error ::Resulting email appears incorrect. (SUBJECT)"
             exit 1
           fi
-          if ! grep -q "version of the message" "$EMAIL_OUTPUT"; then
+          if ! grep -q "See attached" "$EMAIL_OUTPUT"; then
             echo "::error ::Resulting email appears incorrect. (BODY)"
             exit 1
           fi
