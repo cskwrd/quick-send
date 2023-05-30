@@ -2,10 +2,27 @@ name: 'QuickSend File Transfer'
 description: 'Need to run tests in production? Tired of finding your files here when you need them there? Fear not! The QuickSend GitHub Action sends your things when and where you need them.'
 author: 'cskwrd'
 inputs:
-  milliseconds: # change this
+  protocol:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: "Possible values are: ['smtp', 'smtps']"
+  remote-host:
+    required: true
+    description: 'The meaning changes slightly based on protocol, but generally, this is the destination where the payload is transferred.'
+  remote-port:
+    required: true
+    description: 'The meaning changes slightly based on protocol, but generally, this is the port this action should connect to at the destination.'
+  username:
+    required: true
+    description: 'The user to connect with.'
+  password:
+    required: true
+    description: 'The password of the user to connect with.'
+  smtp-from:
+    required: true
+    description: 'The email address that should be placed in the FROM field.'
+  smtp-to:
+    required: true
+    description: 'The email address that should be placed in the TO field.'
 runs:
   using: 'node16'
   main: 'dist/index.js'

@@ -19,6 +19,104 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Install Haraka
+        run: npm install -g Haraka
+
+      - name: Initialize Haraka configuration
+        run: |
+          haraka -i ${{ github.workspace }}/haraka
+
+          # enable debug logging
+          echo DEBUG > ${{ github.workspace }}/haraka/config/loglevel
+          
+          # add hosts to host list
+          echo "example.com" >> ${{ github.workspace }}/haraka/config/host_list
+
+          # configure smtp
+          mv ${{ github.workspace }}/haraka/config/smtp.ini ${{ github.workspace }}/haraka/config/smtp.ini.orig
+          cat <<SMTP > ${{ github.workspace }}/haraka/config/smtp.ini
+          listen=127.1.2.3:2525
+          [headers]
+          max_lines=1000
+          max_received=100
+          SMTP
+
+          # configure plugins
+          mv ${{ github.workspace }}/haraka/config/plugins ${{ github.workspace }}/haraka/config/plugins.orig
+          cat <<PLUGINS > ${{ github.workspace }}/haraka/config/plugins
+          helo.checks
+          rcpt_to.in_host_list
+          headers
+          queue/test
+          PLUGINS
+
+          # configure systemd service
+          cat <<SVC > haraka.service
+          #
+          # systemd service file for Haraka
+          #
+          # Ensure that `daemonize` in `smtp.ini` is set to `false` (which is the default value).
+          #
+          # Put this file in /etc/systemd/system,  modify the paths to suit, then run:
+          # sudo systemctl enable haraka
+          # sudo systemctl start haraka
+          #
+
+          [Unit]
+          Description=Haraka MTA
+          After=syslog.target network.target remote-fs.target nss-lookup.target
+
+          [Service]
+          Type=simple
+          PIDFile=/var/run/haraka.pid
+          ExecStart=/usr/local/bin/haraka -c ${{ github.workspace }}/haraka
+          KillMode=process
+          PrivateTmp=False # can't use PrivateTemp because we need to check the .eml output after the test, it gets sent to /tmp
+
+          [Install]
+          WantedBy=multi-user.target
+          
+          SVC
+          sudo mv haraka.service /etc/systemd/system/haraka.service
+
+      - name: Start Haraka
+        run: sudo systemctl start haraka
+
       - uses: ./
         with:
-          milliseconds: 1000
+          protocol: 'smtp'
+          remote-host: 127.1.2.3
+          remote-port: 2525
+          username: 'use-secret-user-in-production'
+          password: 'use-secret-pass-in-production'
+          smtp-from: 'tx@example.com'
+          smtp-to: 'rx@example.com'
+
+      - name: "Validate Protocol: 'SMTP'"
+        env:
+          EMAIL_OUTPUT: /tmp/email.eml
+        run: |
+          if [ ! -e "$EMAIL_OUTPUT" ]; then
+            echo "::error ::Cannot find .eml file."
+            exit 1
+          fi
+          strs="tx@example.com rx@example.com"
+          if ! grep -q "tx@example.com" "$EMAIL_OUTPUT"; then
+            echo "::error ::Resulting email appears incorrect. (FROM)"
+            exit 1
+          fi
+          if ! grep -q "rx@example.com" "$EMAIL_OUTPUT"; then
+            echo "::error ::Resulting email appears incorrect. (TO)"
+            exit 1
+          fi
+          if ! grep -q "This is the subject line" "$EMAIL_OUTPUT"; then
+            echo "::error ::Resulting email appears incorrect. (SUBJECT)"
+            exit 1
+          fi
+          if ! grep -q "version of the message" "$EMAIL_OUTPUT"; then
+            echo "::error ::Resulting email appears incorrect. (BODY)"
+            exit 1
+          fi
+
+#grep -q "tx@example.com" /tmp/mail.eml && grep -q "rx@example.com" /tmp/mail.eml || (echo fail && exit 1)
