@@ -85,9 +85,9 @@ jobs:
 
       - uses: ./
         with:
-          protocol: 'smtp'
-          remote-host: '127.1.2.3'
-          remote-port: 2525
+          protocol: 'smtps'
+          remote-host: 'smtp-relay.gmail.com'
+          remote-port: 465
           username: 'use-secret-user-in-production'
           password: 'use-secret-pass-in-production'
           smtp-from: 'tx@example.com'
