@@ -97,7 +97,7 @@ jobs:
 
       - name: "Validate Protocol: 'SMTP'"
         env:
-          EMAIL_OUTPUT: /tmp/email.eml
+          EMAIL_OUTPUT: /tmp/mail.eml
         run: |
           sleep 3 # ensure haraka has time to process email
           ls -la /tmp
