@@ -36,7 +36,7 @@ jobs:
           # configure smtp
           mv ${{ github.workspace }}/haraka/config/smtp.ini ${{ github.workspace }}/haraka/config/smtp.ini.orig
           cat <<SMTP > ${{ github.workspace }}/haraka/config/smtp.ini
-          listen=[::0]:2525
+          listen=127.1.2.3:2525
           [headers]
           max_lines=1000
           max_received=100
@@ -81,12 +81,14 @@ jobs:
           sudo mv haraka.service /etc/systemd/system/haraka.service
 
       - name: Start Haraka
-        run: sudo systemctl start haraka
+        run: |
+          sudo systemctl start haraka
+          sleep 3
 
       - uses: ./
         with:
           protocol: 'smtp'
-          remote-host: '::1'
+          remote-host: '127.1.2.3'
           remote-port: 2525
           username: 'use-secret-user-in-production'
           password: 'use-secret-pass-in-production'
