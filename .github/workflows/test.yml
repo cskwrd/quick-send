@@ -83,7 +83,7 @@ jobs:
       - name: Start Haraka
         run: |
           sudo systemctl start haraka
-          sleep 3 # ensure haraka has time to start before running test
+          sleep 1 # ensure haraka has time to start before running test
 
       - uses: ./
         with:
