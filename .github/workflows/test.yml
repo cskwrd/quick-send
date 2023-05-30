@@ -99,8 +99,6 @@ jobs:
         env:
           EMAIL_OUTPUT: /tmp/mail.eml
         run: |
-          sleep 3 # ensure haraka has time to process email
-          ls -la /tmp
           if [ ! -e "$EMAIL_OUTPUT" ]; then
             echo "::error ::Cannot find .eml file."
             exit 1
