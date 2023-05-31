@@ -11,7 +11,8 @@ async function run(): Promise<void> {
     const useTLS = protocol === Protocols.SMTPS // TODO : convert this to a enum type, should also handle casing issues
     const remoteHost: string = core.getInput('remote-host', required)
     const remotePort: string = core.getInput('remote-port', required)
-    core.debug(`Connecting to '${remoteHost}' on port '${remotePort}' ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    const ep = new Endpoint(remoteHost, parseInt(remotePort, 10))
+    core.debug(`Connecting to '${ep.host}' on port '${ep.port}' ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
     const username = core.getInput('username', required)
     const password = core.getInput('password', required)
@@ -23,8 +24,6 @@ async function run(): Promise<void> {
     if (!to) {
       throw new Error('to not a valid string')
     }
-
-    const ep = new Endpoint(remoteHost, parseInt(remotePort, 10))
 
     const globber = await glob.create('output/**/*.*', {
       followSymbolicLinks: false
