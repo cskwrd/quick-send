@@ -6,16 +6,17 @@ import {smtp} from './smtp'
 
 async function run(): Promise<void> {
   try {
-    const protocol = Protocols.parse(core.getInput('protocol'))
+    const required = {required: true}
+    const protocol = Protocols.parse(core.getInput('protocol', required))
     const useTLS = protocol === Protocols.SMTPS // TODO : convert this to a enum type, should also handle casing issues
-    const remoteHost: string = core.getInput('remote-host')
-    const remotePort: string = core.getInput('remote-port')
+    const remoteHost: string = core.getInput('remote-host', required)
+    const remotePort: string = core.getInput('remote-port', required)
     core.debug(`Connecting to '${remoteHost}' on port '${remotePort}' ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
-    const username = core.getInput('username')
-    const password = core.getInput('password')
-    const from = core.getInput('smtp-from')
-    const to = core.getInput('smtp-to')
+    const username = core.getInput('username', required)
+    const password = core.getInput('password', required)
+    const from = core.getInput('smtp-from', required)
+    const to = core.getInput('smtp-to', required)
     if (!from) {
       throw new Error('from not a valid string')
     }

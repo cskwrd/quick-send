@@ -91,15 +91,16 @@ function run() {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const protocol = classes_1.Protocols.parse(core.getInput('protocol'));
+            const required = { required: true };
+            const protocol = classes_1.Protocols.parse(core.getInput('protocol', required));
             const useTLS = protocol === classes_1.Protocols.SMTPS; // TODO : convert this to a enum type, should also handle casing issues
-            const remoteHost = core.getInput('remote-host');
-            const remotePort = core.getInput('remote-port');
+            const remoteHost = core.getInput('remote-host', required);
+            const remotePort = core.getInput('remote-port', required);
             core.debug(`Connecting to '${remoteHost}' on port '${remotePort}' ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            const username = core.getInput('username');
-            const password = core.getInput('password');
-            const from = core.getInput('smtp-from');
-            const to = core.getInput('smtp-to');
+            const username = core.getInput('username', required);
+            const password = core.getInput('password', required);
+            const from = core.getInput('smtp-from', required);
+            const to = core.getInput('smtp-to', required);
             if (!from) {
                 throw new Error('from not a valid string');
             }
