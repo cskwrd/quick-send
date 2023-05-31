@@ -53,7 +53,8 @@ exports.Colorizer = {
     BLUE: '\x1b[34m',
     MAGENTA: '\x1b[35m',
     CYAN: '\x1b[36m',
-    WHITE: '\x1b[37m'
+    WHITE: '\x1b[37m',
+    GRAY: '\x1b[90m'
 };
 
 
@@ -135,19 +136,19 @@ function run() {
                 throw new Error('to not a valid string');
             }
             core.startGroup('Connection Info');
-            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Protocol:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${protocol}${colorizer_1.Colorizer.OFF}`);
-            let formattedUsername = `\x1b[90mSomething Falsy${colorizer_1.Colorizer.OFF}`;
+            core.info(`${colorizer_1.Colorizer.GRAY}Protocol:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${protocol}${colorizer_1.Colorizer.OFF}`);
+            let formattedUsername = `${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.BLACK}Something Falsy${colorizer_1.Colorizer.OFF}`;
             if (username) {
                 formattedUsername = `${colorizer_1.Colorizer.RED}${username}${colorizer_1.Colorizer.OFF}`;
             }
-            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Username:${colorizer_1.Colorizer.OFF} ${formattedUsername}`);
-            let formattedPassword = `\x1b[90mSomething Falsy${colorizer_1.Colorizer.OFF}`;
+            core.info(`${colorizer_1.Colorizer.GRAY}Username:${colorizer_1.Colorizer.OFF} ${formattedUsername}`);
+            let formattedPassword = `${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.BLACK}Something Falsy${colorizer_1.Colorizer.OFF}`;
             if (password) {
                 formattedPassword = `${colorizer_1.Colorizer.RED}<redacted>${colorizer_1.Colorizer.OFF}`;
             }
-            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Password:${colorizer_1.Colorizer.OFF} ${formattedPassword}`);
-            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Remote Host:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.host}${colorizer_1.Colorizer.OFF}`);
-            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Remote Port:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.port}${colorizer_1.Colorizer.OFF}`);
+            core.info(`${colorizer_1.Colorizer.GRAY}Password:${colorizer_1.Colorizer.OFF} ${formattedPassword}`);
+            core.info(`${colorizer_1.Colorizer.GRAY}Remote Host:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.host}${colorizer_1.Colorizer.OFF}`);
+            core.info(`${colorizer_1.Colorizer.GRAY}Remote Port:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.port}${colorizer_1.Colorizer.OFF}`);
             core.endGroup();
             const fileGlobs = core.getMultilineInput('files', required);
             const globber = yield glob.create(fileGlobs.join('\n'), {

@@ -33,27 +33,23 @@ async function run(): Promise<void> {
 
     core.startGroup('Connection Info')
     core.info(
-      `${TextEffects.DIM}${Colorizer.WHITE}Protocol:${Colorizer.OFF} ${Colorizer.RED}${protocol}${Colorizer.OFF}`
+      `${Colorizer.GRAY}Protocol:${Colorizer.OFF} ${Colorizer.RED}${protocol}${Colorizer.OFF}`
     )
-    let formattedUsername = `\x1b[90mSomething Falsy${Colorizer.OFF}`
+    let formattedUsername = `${TextEffects.DIM}${Colorizer.BLACK}Something Falsy${Colorizer.OFF}`
     if (username) {
       formattedUsername = `${Colorizer.RED}${username}${Colorizer.OFF}`
     }
-    core.info(
-      `${TextEffects.DIM}${Colorizer.WHITE}Username:${Colorizer.OFF} ${formattedUsername}`
-    )
-    let formattedPassword = `\x1b[90mSomething Falsy${Colorizer.OFF}`
+    core.info(`${Colorizer.GRAY}Username:${Colorizer.OFF} ${formattedUsername}`)
+    let formattedPassword = `${TextEffects.DIM}${Colorizer.BLACK}Something Falsy${Colorizer.OFF}`
     if (password) {
       formattedPassword = `${Colorizer.RED}<redacted>${Colorizer.OFF}`
     }
+    core.info(`${Colorizer.GRAY}Password:${Colorizer.OFF} ${formattedPassword}`)
     core.info(
-      `${TextEffects.DIM}${Colorizer.WHITE}Password:${Colorizer.OFF} ${formattedPassword}`
+      `${Colorizer.GRAY}Remote Host:${Colorizer.OFF} ${Colorizer.RED}${ep.host}${Colorizer.OFF}`
     )
     core.info(
-      `${TextEffects.DIM}${Colorizer.WHITE}Remote Host:${Colorizer.OFF} ${Colorizer.RED}${ep.host}${Colorizer.OFF}`
-    )
-    core.info(
-      `${TextEffects.DIM}${Colorizer.WHITE}Remote Port:${Colorizer.OFF} ${Colorizer.RED}${ep.port}${Colorizer.OFF}`
+      `${Colorizer.GRAY}Remote Port:${Colorizer.OFF} ${Colorizer.RED}${ep.port}${Colorizer.OFF}`
     )
     core.endGroup()
 
