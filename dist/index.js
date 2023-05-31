@@ -140,7 +140,7 @@ function run() {
             const message = {
                 from,
                 to,
-                subject: `[${github.context.repo}] Here is your QuickSend File Transfer`,
+                subject: `[${github.context.repo.owner}/${github.context.repo.repo}] Here is your QuickSend File Transfer`,
                 text: 'See attached',
                 attachments
             };
