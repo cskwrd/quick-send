@@ -99,8 +99,8 @@ function run() {
             const remotePort = core.getInput('remote-port', required);
             const ep = new classes_1.Endpoint(remoteHost, parseInt(remotePort, 10));
             core.debug(`Connecting to '${ep.host}' on port '${ep.port}' ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            const username = core.getInput('username', required);
-            const password = core.getInput('password', required);
+            const username = core.getInput('username');
+            const password = core.getInput('password');
             const from = core.getInput('smtp-from', required);
             const to = core.getInput('smtp-to', required);
             if (!from) {
