@@ -7,6 +7,13 @@ import * as fs from 'fs'
 
 async function run(): Promise<void> {
   try {
+    core.info(
+      `-------------------------------------------------------------------------------`
+    )
+    core.info(`Thanks for using \x1b[2m\x1b[32mQuickSend File Transfer\x1b[0m!`)
+    core.info(
+      `-------------------------------------------------------------------------------`
+    )
     const required = {required: true}
     const protocol = Protocols.parse(core.getInput('protocol', required))
     const useTLS = protocol === Protocols.SMTPS // TODO : convert this to a enum type, should also handle casing issues
