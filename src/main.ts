@@ -8,11 +8,28 @@ import * as fs from 'fs'
 async function run(): Promise<void> {
   try {
     core.info(
-      `-------------------------------------------------------------------------------`
+      `----------------------------------------------------------------------------------------------------------------------------------------------------------------`
     )
-    core.info(`Thanks for using \x1b[2m\x1b[32mQuickSend File Transfer\x1b[0m!`)
     core.info(
-      `-------------------------------------------------------------------------------`
+      `Thanks for using \x1b[2m\x1b[32mQuickSend File Transfer\x1b[0m. We'll get those files where you need need them as fast as ethernet and fiber optics will carry them! 🚀`
+    )
+    core.info(
+      `----------------------------------------------------------------------------------------------------------------------------------------------------------------`
+    )
+    core.info(
+      `👀 Interested in saving time in the future? Watch the repository to get notified about new releases! --> https://github.com/cskwrd/quick-send-action/subscription`
+    )
+    core.info(
+      `🌟 Want to \x1b[33mspend less time waiting\x1b[0m on friends or co-workers? Star the repo to and expose them to QuickSend! --> https://github.com/cskwrd/quick-send-action`
+    )
+    core.info(
+      `❓ Have a question? Start a discussion! --> https://github.com/cskwrd/quick-send-action/discussions`
+    )
+    core.info(
+      `🐛 Found a bug? \x1b[1m\x1b[30mIMPOSSIBLE!\x1b[0m Haha, just kidding. Open an issue! --> https://github.com/cskwrd/quick-send-action/issues`
+    )
+    core.info(
+      `----------------------------------------------------------------------------------------------------------------------------------------------------------------`
     )
     const required = {required: true}
     const protocol = Protocols.parse(core.getInput('protocol', required))
