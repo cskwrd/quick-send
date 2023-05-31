@@ -37,6 +37,28 @@ exports.Protocols = {
 
 /***/ }),
 
+/***/ 3299:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Colorizer = void 0;
+exports.Colorizer = {
+    OFF: '\x1b[0m',
+    BLACK: '\x1b[30m',
+    RED: '\x1b[31m',
+    GREEN: '\x1b[32m',
+    YELLOW: '\x1b[33m',
+    BLUE: '\x1b[34m',
+    MAGENTA: '\x1b[35m',
+    CYAN: '\x1b[36m',
+    WHITE: '\x1b[37m'
+};
+
+
+/***/ }),
+
 /***/ 3109:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -88,18 +110,13 @@ const glob = __importStar(__nccwpck_require__(8090));
 const classes_1 = __nccwpck_require__(4209);
 const smtp_1 = __nccwpck_require__(627);
 const fs = __importStar(__nccwpck_require__(7147));
+const colorizer_1 = __nccwpck_require__(3299);
+const text_effects_1 = __nccwpck_require__(6972);
 function run() {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.info(`----------------------------------------------------------------------------------------------------------------------------------------------------------------`);
-            core.info(`Thanks for using \x1b[2m\x1b[32mQuickSend File Transfer\x1b[0m. We'll get those files where you need need them as fast as ethernet and fiber optics will carry them! 🚀`);
-            core.info(`----------------------------------------------------------------------------------------------------------------------------------------------------------------`);
-            core.info(`👀 Interested in saving time in the future? Watch the repository to get notified about new releases! --> https://github.com/cskwrd/quick-send-action/subscription`);
-            core.info(`🌟 Want to \x1b[33mspend less time waiting\x1b[0m on friends or co-workers? Star the repo to and expose them to QuickSend! --> https://github.com/cskwrd/quick-send-action`);
-            core.info(`❓ Have a question? Start a discussion! --> https://github.com/cskwrd/quick-send-action/discussions`);
-            core.info(`🐛 Found a bug? \x1b[1m\x1b[30mIMPOSSIBLE!\x1b[0m Haha, just kidding. Open an issue! --> https://github.com/cskwrd/quick-send-action/issues`);
-            core.info(`----------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+            printBanner();
             const required = { required: true };
             const protocol = classes_1.Protocols.parse(core.getInput('protocol', required));
             const useTLS = protocol === classes_1.Protocols.SMTPS; // TODO : convert this to a enum type, should also handle casing issues
@@ -117,6 +134,21 @@ function run() {
             if (!to) {
                 throw new Error('to not a valid string');
             }
+            core.startGroup('Connection Info');
+            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Protocol:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${protocol}${colorizer_1.Colorizer.OFF}`);
+            let formattedUsername = `\x1b[90mSomething Falsy${colorizer_1.Colorizer.OFF}`;
+            if (username) {
+                formattedUsername = `${colorizer_1.Colorizer.RED}${username}${colorizer_1.Colorizer.OFF}`;
+            }
+            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Username:${colorizer_1.Colorizer.OFF} ${formattedUsername}`);
+            let formattedPassword = `\x1b[90mSomething Falsy${colorizer_1.Colorizer.OFF}`;
+            if (password) {
+                formattedPassword = `${colorizer_1.Colorizer.RED}<redacted>${colorizer_1.Colorizer.OFF}`;
+            }
+            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Password:${colorizer_1.Colorizer.OFF} ${formattedPassword}`);
+            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Remote Host:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.host}${colorizer_1.Colorizer.OFF}`);
+            core.info(`${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.WHITE}Remote Port:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.port}${colorizer_1.Colorizer.OFF}`);
+            core.endGroup();
             const fileGlobs = core.getMultilineInput('files', required);
             const globber = yield glob.create(fileGlobs.join('\n'), {
                 followSymbolicLinks: false // in prep for sftp, do not follow symlinks
@@ -161,6 +193,18 @@ function run() {
     });
 }
 run();
+function printBanner() {
+    core.info(`------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+    core.info(`Thanks for using ${text_effects_1.TextEffects.BOLD}${colorizer_1.Colorizer.GREEN}QuickSend File Transfer${colorizer_1.Colorizer.OFF}. We'll get those files where you need need them as fast as ethernet, fiber optics, and radio waves will carry them! 🚀`);
+    core.info(`------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+    core.info(`👀 Interested in saving time in the future? Watch the repository to get notified about new releases! --> https://github.com/cskwrd/quick-send-action/subscription`);
+    core.info(`🌟 Want to ${colorizer_1.Colorizer.YELLOW}spend less time waiting${colorizer_1.Colorizer.OFF} on friends or co-workers? Star the repo to and expose them to QuickSend! --> https://github.com/cskwrd/quick-send-action`);
+    core.info(`❓ Have a question? Start a discussion! --> https://github.com/cskwrd/quick-send-action/discussions`);
+    core.info(`🐛 Found a bug? ${text_effects_1.TextEffects.BOLD}${colorizer_1.Colorizer.BLACK}IMPOSSIBLE! Haha, just kidding.${colorizer_1.Colorizer.OFF} Open an issue! --> https://github.com/cskwrd/quick-send-action/issues`);
+    core.info(`------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+    core.info(`📦 Version: ${process.env.GITHUB_ACTION_REF}`);
+    core.info(`------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+}
 
 
 /***/ }),
@@ -249,6 +293,25 @@ function smtp(useTLS, endpoint, username, password, payload) {
     });
 }
 exports.smtp = smtp;
+
+
+/***/ }),
+
+/***/ 6972:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextEffects = void 0;
+exports.TextEffects = {
+    BOLD: '\x1b[1m',
+    DIM: '\x1b[2m',
+    UNDERSCORE: '\x1b[4m',
+    BLINK: '\x1b[5m',
+    REVERSE: '\x1b[7m',
+    HIDDEN: '\x1b[8m'
+};
 
 
 /***/ }),
