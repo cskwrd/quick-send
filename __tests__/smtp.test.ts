@@ -17,22 +17,32 @@ describe('required inputs', () => {
   })
 })
 
-// test('wait 500 ms', async () => {
-//   const start = new Date()
-//   await wait(500)
-//   const end = new Date()
-//   var delta = Math.abs(end.getTime() - start.getTime())
-//   expect(delta).toBeGreaterThan(450)
-// })
-
 // // shows how the runner will run a javascript action with env / stdout protocol
-// // note: this seems to fail when executing with `npm test` locally
+// // note: when an error is thrown the stdout and err are captured but not dumped to the test output
+// //       because of this I am not sure this text is supposed to be functional
+// //       leaving it here as an example of how you might be able to test the code manual on the runner
 // test('test runs', () => {
-//   process.env['INPUT_MILLISECONDS'] = '500'
-//   const np = process.execPath
-//   const ip = path.join(__dirname, '..', 'lib', 'main.js')
-//   const options: cp.ExecFileSyncOptions = {
-//     env: process.env
+//   try {
+//     process.env['GITHUB_REPOSITORY'] = 'test/run'
+
+//     process.env['INPUT_PROTOCOL'] = 'smtp'
+//     process.env['INPUT_REMOTE-HOST'] = '127.1.2.3'
+//     process.env['INPUT_REMOTE-PORT'] = '2525'
+//     process.env['INPUT_USERNAME'] = 'use-secret-user-in-production'
+//     process.env['INPUT_PASSWORD'] = 'use-secret-pass-in-production'
+//     process.env['INPUT_SMTP-FROM'] = 'tx@example.com'
+//     process.env['INPUT_SMTP-TO'] = 'rx@example.com'
+//     process.env['INPUT_FILES'] = 'transporter-room/**/*'
+//     const np = process.execPath
+//     const ip = path.join(__dirname, '..', 'lib', 'main.js')
+//     const options: cp.ExecFileSyncOptions = {
+//       env: process.env
+//     }
+//     const result = cp.execFileSync(np, [ip], {env: process.env}).toString()
+//     console.log(result)
+//   } catch (error: any) {
+//     // for some reason the error is not logged in it isn't caught ang logged like this
+//     console.log(error.stdout.toString())
+//     expect(false).toBeTruthy()
 //   }
-//   console.log(cp.execFileSync(np, [ip], options).toString())
 // })

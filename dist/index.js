@@ -87,6 +87,7 @@ const github = __importStar(__nccwpck_require__(5438));
 const glob = __importStar(__nccwpck_require__(8090));
 const classes_1 = __nccwpck_require__(4209);
 const smtp_1 = __nccwpck_require__(627);
+const fs = __importStar(__nccwpck_require__(7147));
 function run() {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
@@ -110,7 +111,7 @@ function run() {
             }
             const fileGlobs = core.getMultilineInput('files', required);
             const globber = yield glob.create(fileGlobs.join('\n'), {
-                followSymbolicLinks: false
+                followSymbolicLinks: false // in prep for sftp, do not follow symlinks
             });
             const attachments = [];
             try {
@@ -119,7 +120,9 @@ function run() {
                     _d = false;
                     try {
                         const file = _c;
-                        attachments.push({ path: file });
+                        if (fs.statSync(file).isFile()) {
+                            attachments.push({ path: file });
+                        }
                     }
                     finally {
                         _d = true;

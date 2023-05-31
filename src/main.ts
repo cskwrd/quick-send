@@ -3,6 +3,7 @@ import * as github from '@actions/github'
 import * as glob from '@actions/glob'
 import {Endpoint, Protocols} from './classes'
 import {smtp} from './smtp'
+import * as fs from 'fs'
 
 async function run(): Promise<void> {
   try {
@@ -27,11 +28,13 @@ async function run(): Promise<void> {
 
     const fileGlobs = core.getMultilineInput('files', required)
     const globber = await glob.create(fileGlobs.join('\n'), {
-      followSymbolicLinks: false
+      followSymbolicLinks: false // in prep for sftp, do not follow symlinks
     })
     const attachments: object[] = []
     for await (const file of globber.globGenerator()) {
-      attachments.push({path: file})
+      if (fs.statSync(file).isFile()) {
+        attachments.push({path: file})
+      }
     }
     core.debug(`Attaching '${attachments.length}' file(s)...`)
     const message = {
