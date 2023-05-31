@@ -93,8 +93,9 @@ jobs:
           protocol: 'smtp'
           remote-host: '127.1.2.3'
           remote-port: 2525
-          username: 'use-secret-user-in-production'
-          password: 'use-secret-pass-in-production'
+          # to connect without auth, set username and password to blank
+          username: ''
+          password: ''
           smtp-from: 'tx@example.com'
           smtp-to: 'rx@example.com'
           files: |

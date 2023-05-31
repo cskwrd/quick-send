@@ -209,23 +209,22 @@ function smtp(useTLS, endpoint, username, password, payload) {
         if (isNaN(endpoint.port)) {
             throw new Error('port not a number');
         }
-        if (!username) {
-            throw new Error('username not a string');
+        let authObj = undefined;
+        if (username || password) {
+            authObj = {
+                user: username,
+                pass: password
+            };
         }
-        if (!password) {
-            throw new Error('password not a string');
-        }
-        // auth is not yet implemented because
-        // haraka forces use of tls when authentication is used
-        // and i haven't worked out setting up tls in the workflow yet
-        // const auth = {
-        //   user: username,
-        //   pass: password
-        // }
         const transporter = nodemailer_1.default.createTransport({
             host: endpoint.host,
             port: endpoint.port,
-            secure: useTLS // will auto-upgrade later with STARTTLS, if server supports it
+            secure: useTLS,
+            auth: authObj,
+            tls: {
+                // do not fail on invalid certs if connecting to localhost... well strings that start with '127'
+                rejectUnauthorized: !endpoint.host.startsWith('127')
+            }
         });
         // verify connection configuration
         transporter.verify(function (error) {
