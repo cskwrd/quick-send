@@ -1,16 +1,18 @@
-import { Endpoint } from '../src/classes'
+import {Endpoint} from '../src/classes'
 import {smtp} from '../src/smtp'
 import * as process from 'process'
 import * as cp from 'child_process'
 import * as path from 'path'
 import {describe, expect, test} from '@jest/globals'
 
-describe("required inputs", () => {
-  describe("remote-port", () => {
+describe('required inputs', () => {
+  describe('remote-port', () => {
     test('throws invalid number', async () => {
       const server = 'some.server'
       const port = parseInt('foo', 10)
-      await expect(smtp(false, new Endpoint(server, port), "username", "password", {})).rejects.toThrow('port not a number')
+      await expect(
+        smtp(false, new Endpoint(server, port), 'username', 'password', {})
+      ).rejects.toThrow('port not a number')
     })
   })
 })

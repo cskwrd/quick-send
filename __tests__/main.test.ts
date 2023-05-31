@@ -4,8 +4,8 @@ import * as cp from 'child_process'
 import * as path from 'path'
 import {describe, expect, test} from '@jest/globals'
 
-describe("required inputs", () => {
-  describe("remote-port", () => {
+describe('required inputs', () => {
+  describe('remote-port', () => {
     test('throws invalid number', async () => {
       const input = parseInt('foo', 10)
       await expect(wait(input)).rejects.toThrow('milliseconds not a number')
