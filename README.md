@@ -22,12 +22,6 @@ jobs:
         run: |
           npm ci
           npm run build
-
-          # at this time, the action automatically attaches files found in $GITHUB_WORKSPACE/output
-          # to the sent email, so move your built artifacts to the output directory
-          mkdir ${{ github.workspace }}/output
-          echo "Important file 1" > ${{ github.workspace }}/output/file1.txt
-          echo "Important file 2" > ${{ github.workspace }}/output/some_other_file_2.ext
     
       - name: '📧 Quickly send files'
         uses: cskwrd/quick-send-action@v0.1
@@ -39,6 +33,8 @@ jobs:
           password: ${{ secrets.smtp_password }}
           smtp-from: ${{ secrets.smtp_username }}
           smtp-to: ${{ secrets.smtp_username }}
+          files: |
+            dist/**/*
 ```
 
 ### Settings
@@ -48,11 +44,12 @@ To add a `secret` go to the `Settings` tab in your project then select `Secrets`
 I strongly recommend you store your `password` as a secret.
 
 | Key Name             | Required | Example                       | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-|----------------------|----------|-------------------------------|-------------------------------------------------------------------------------------------------------------|
-| `protocol`           | Yes      | `smtps`                       | At this time, the only valid values are `smtp` or `smtps` (most email providers prefer `smtps`)             |
-| `remote-host`        | Yes      | `smtp.gmail.com`              | SMTP server host name                                                                                       |
-| `remote-port`        | Yes      | `465`                         | The open port one the SMTP server                                                                           |
-| `username`           | Yes      | `example@gmail.com`           | The username to authenticate as                                                                             |
-| `password`           | Yes      | `some-secret-password`        | The password for the user above                                                                             |
-| `smtp-from`          | Yes      | `example@gmail.com`           | The email address to use as the `FROM` address                                                              |
-| `smtp-to`            | Yes      | `example@gmail.com`           | The email address to use as the `TO` address                                                                |
+|----------------------|----------|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `protocol`           | Yes      | `smtps`                       | At this time, the only valid values are `smtp` or `smtps` (most email providers prefer `smtps`)                                                                          |
+| `remote-host`        | Yes      | `smtp.gmail.com`              | SMTP server host name                                                                                                                                                    |
+| `remote-port`        | Yes      | `465`                         | The open port one the SMTP server                                                                                                                                        |
+| `username`           | Yes      | `example@gmail.com`           | The username to authenticate as                                                                                                                                          |
+| `password`           | Yes      | `some-secret-password`        | The password for the user above                                                                                                                                          |
+| `smtp-from`          | Yes      | `example@gmail.com`           | The email address to use as the `FROM` address                                                                                                                           |
+| `smtp-to`            | Yes      | `example@gmail.com`           | The email address to use as the `TO` address                                                                                                                             |
+| `files`              | Yes      | `transporter-room/**/*`       | List of patterns specifying files to include or exclude    ([More info on patterns](https://github.com/actions/toolkit/tree/main/packages/glob#patterns))                |

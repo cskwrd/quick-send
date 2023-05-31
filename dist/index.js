@@ -96,7 +96,8 @@ function run() {
             const useTLS = protocol === classes_1.Protocols.SMTPS; // TODO : convert this to a enum type, should also handle casing issues
             const remoteHost = core.getInput('remote-host', required);
             const remotePort = core.getInput('remote-port', required);
-            core.debug(`Connecting to '${remoteHost}' on port '${remotePort}' ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+            const ep = new classes_1.Endpoint(remoteHost, parseInt(remotePort, 10));
+            core.debug(`Connecting to '${ep.host}' on port '${ep.port}' ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
             const username = core.getInput('username', required);
             const password = core.getInput('password', required);
             const from = core.getInput('smtp-from', required);
@@ -107,8 +108,8 @@ function run() {
             if (!to) {
                 throw new Error('to not a valid string');
             }
-            const ep = new classes_1.Endpoint(remoteHost, parseInt(remotePort, 10));
-            const globber = yield glob.create('output/**/*.*', {
+            const fileGlobs = core.getMultilineInput('files', required);
+            const globber = yield glob.create(fileGlobs.join('\n'), {
                 followSymbolicLinks: false
             });
             const attachments = [];

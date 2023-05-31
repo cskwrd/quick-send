@@ -25,7 +25,8 @@ async function run(): Promise<void> {
       throw new Error('to not a valid string')
     }
 
-    const globber = await glob.create('output/**/*.*', {
+    const fileGlobs = core.getMultilineInput('files', required)
+    const globber = await glob.create(fileGlobs.join('\n'), {
       followSymbolicLinks: false
     })
     const attachments: object[] = []

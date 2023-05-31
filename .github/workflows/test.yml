@@ -56,11 +56,7 @@ jobs:
           #
           # systemd service file for Haraka
           #
-          # Ensure that `daemonize` in `smtp.ini` is set to `false` (which is the default value).
-          #
-          # Put this file in /etc/systemd/system,  modify the paths to suit, then run:
-          # sudo systemctl enable haraka
-          # sudo systemctl start haraka
+          # Ensure that 'daemonize' in 'smtp.ini' is set to 'false' (which is the default value).
           #
 
           [Unit]
@@ -87,9 +83,9 @@ jobs:
 
       - name: Create test output files
         run: |
-          mkdir -p ${{ github.workspace }}/output/sub-dir
-          echo "Hello" > ${{ github.workspace }}/output/hello.txt
-          echo "world" > ${{ github.workspace }}/output/sub-dir/world.csv
+          mkdir -p ${{ github.workspace }}/transporter-room/sub-dir
+          echo "Hello" > ${{ github.workspace }}/transporter-room/hello.txt
+          echo "world" > ${{ github.workspace }}/transporter-room/sub-dir/world.csv
           sleep 1 # ensure files are written before running test
 
       - uses: ./
@@ -101,6 +97,8 @@ jobs:
           password: 'use-secret-pass-in-production'
           smtp-from: 'tx@example.com'
           smtp-to: 'rx@example.com'
+          files: |
+            transporter-room/**/*
 
       - name: "Validate Protocol: 'SMTP'"
         env:
@@ -125,6 +123,14 @@ jobs:
           fi
           if ! grep -q "See attached" "$EMAIL_OUTPUT"; then
             echo "::error ::Resulting email appears incorrect. (BODY)"
+            exit 1
+          fi
+          if ! grep -q "name=hello.txt" "$EMAIL_OUTPUT"; then
+            echo "::error ::Resulting email appears incorrect. (Attachment #1)"
+            exit 1
+          fi
+          if ! grep -q "name=world.csv" "$EMAIL_OUTPUT"; then
+            echo "::error ::Resulting email appears incorrect. (Attachment #2)"
             exit 1
           fi
 
