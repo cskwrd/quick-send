@@ -35,16 +35,20 @@ async function run(): Promise<void> {
     core.info(
       `${Colorizer.GRAY}Protocol:${Colorizer.OFF} ${Colorizer.RED}${protocol}${Colorizer.OFF}`
     )
-    let formattedUsername = `${TextEffects.DIM}${Colorizer.BLACK}Something Falsy${Colorizer.OFF}`
+    let formattedUsername = 'Something Falsy'
     if (username) {
-      formattedUsername = `${Colorizer.RED}${username}${Colorizer.OFF}`
+      formattedUsername = username
     }
-    core.info(`${Colorizer.GRAY}Username:${Colorizer.OFF} ${formattedUsername}`)
-    let formattedPassword = `${TextEffects.DIM}${Colorizer.BLACK}Something Falsy${Colorizer.OFF}`
+    core.info(
+      `${Colorizer.GRAY}Username:${Colorizer.OFF} ${Colorizer.RED}${formattedUsername}${Colorizer.OFF}`
+    )
+    let formattedPassword = 'Something Falsy'
     if (password) {
-      formattedPassword = `${Colorizer.RED}<redacted>${Colorizer.OFF}`
+      formattedPassword = '<redacted>'
     }
-    core.info(`${Colorizer.GRAY}Password:${Colorizer.OFF} ${formattedPassword}`)
+    core.info(
+      `${Colorizer.GRAY}Password:${Colorizer.OFF} ${Colorizer.RED}${formattedPassword}${Colorizer.OFF}`
+    )
     core.info(
       `${Colorizer.GRAY}Remote Host:${Colorizer.OFF} ${Colorizer.RED}${ep.host}${Colorizer.OFF}`
     )

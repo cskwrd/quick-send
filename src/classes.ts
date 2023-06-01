@@ -9,12 +9,12 @@ export class Endpoint {
 }
 
 export const Protocols = {
-  None: 0,
-  SMTP: 1,
-  SMTPS: 2,
+  UNKNOWN: 'UNKNOWN',
+  SMTP: 'SMTP',
+  SMTPS: 'SMTPS',
   parse(input: string) {
     if (!input) {
-      return this.None
+      return this.UNKNOWN
     }
     switch (input.toUpperCase()) {
       case 'SMTP':
@@ -22,7 +22,7 @@ export const Protocols = {
       case 'SMTPS':
         return this.SMTPS
       default:
-        return this.None
+        return this.UNKNOWN
     }
   }
 } as const

@@ -16,12 +16,12 @@ class Endpoint {
 }
 exports.Endpoint = Endpoint;
 exports.Protocols = {
-    None: 0,
-    SMTP: 1,
-    SMTPS: 2,
+    UNKNOWN: 'UNKNOWN',
+    SMTP: 'SMTP',
+    SMTPS: 'SMTPS',
     parse(input) {
         if (!input) {
-            return this.None;
+            return this.UNKNOWN;
         }
         switch (input.toUpperCase()) {
             case 'SMTP':
@@ -29,7 +29,7 @@ exports.Protocols = {
             case 'SMTPS':
                 return this.SMTPS;
             default:
-                return this.None;
+                return this.UNKNOWN;
         }
     }
 };
@@ -137,16 +137,16 @@ function run() {
             }
             core.startGroup('Connection Info');
             core.info(`${colorizer_1.Colorizer.GRAY}Protocol:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${protocol}${colorizer_1.Colorizer.OFF}`);
-            let formattedUsername = `${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.BLACK}Something Falsy${colorizer_1.Colorizer.OFF}`;
+            let formattedUsername = 'Something Falsy';
             if (username) {
-                formattedUsername = `${colorizer_1.Colorizer.RED}${username}${colorizer_1.Colorizer.OFF}`;
+                formattedUsername = username;
             }
-            core.info(`${colorizer_1.Colorizer.GRAY}Username:${colorizer_1.Colorizer.OFF} ${formattedUsername}`);
-            let formattedPassword = `${text_effects_1.TextEffects.DIM}${colorizer_1.Colorizer.BLACK}Something Falsy${colorizer_1.Colorizer.OFF}`;
+            core.info(`${colorizer_1.Colorizer.GRAY}Username:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${formattedUsername}${colorizer_1.Colorizer.OFF}`);
+            let formattedPassword = 'Something Falsy';
             if (password) {
-                formattedPassword = `${colorizer_1.Colorizer.RED}<redacted>${colorizer_1.Colorizer.OFF}`;
+                formattedPassword = '<redacted>';
             }
-            core.info(`${colorizer_1.Colorizer.GRAY}Password:${colorizer_1.Colorizer.OFF} ${formattedPassword}`);
+            core.info(`${colorizer_1.Colorizer.GRAY}Password:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${formattedPassword}${colorizer_1.Colorizer.OFF}`);
             core.info(`${colorizer_1.Colorizer.GRAY}Remote Host:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.host}${colorizer_1.Colorizer.OFF}`);
             core.info(`${colorizer_1.Colorizer.GRAY}Remote Port:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.port}${colorizer_1.Colorizer.OFF}`);
             core.endGroup();
