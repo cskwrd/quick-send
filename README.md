@@ -24,7 +24,7 @@ jobs:
           npm run build
     
       - name: '📧 Quickly send files'
-        uses: cskwrd/quick-send-action@v0.1
+        uses: cskwrd/quick-send-action@v1
         with:
           protocol: 'smtps'
           remote-host: 'smtp.gmail.com'
