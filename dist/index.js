@@ -16,12 +16,12 @@ class Endpoint {
 }
 exports.Endpoint = Endpoint;
 exports.Protocols = {
-    None: 0,
-    SMTP: 1,
-    SMTPS: 2,
+    UNKNOWN: 'UNKNOWN',
+    SMTP: 'SMTP',
+    SMTPS: 'SMTPS',
     parse(input) {
         if (!input) {
-            return this.None;
+            return this.UNKNOWN;
         }
         switch (input.toUpperCase()) {
             case 'SMTP':
@@ -29,9 +29,32 @@ exports.Protocols = {
             case 'SMTPS':
                 return this.SMTPS;
             default:
-                return this.None;
+                return this.UNKNOWN;
         }
     }
+};
+
+
+/***/ }),
+
+/***/ 3299:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Colorizer = void 0;
+exports.Colorizer = {
+    OFF: '\x1b[0m',
+    BLACK: '\x1b[30m',
+    RED: '\x1b[31m',
+    GREEN: '\x1b[32m',
+    YELLOW: '\x1b[33m',
+    BLUE: '\x1b[34m',
+    MAGENTA: '\x1b[35m',
+    CYAN: '\x1b[36m',
+    WHITE: '\x1b[37m',
+    GRAY: '\x1b[90m'
 };
 
 
@@ -87,28 +110,49 @@ const github = __importStar(__nccwpck_require__(5438));
 const glob = __importStar(__nccwpck_require__(8090));
 const classes_1 = __nccwpck_require__(4209);
 const smtp_1 = __nccwpck_require__(627);
+const fs = __importStar(__nccwpck_require__(7147));
+const colorizer_1 = __nccwpck_require__(3299);
+const text_effects_1 = __nccwpck_require__(6972);
 function run() {
     var _a, e_1, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const protocol = classes_1.Protocols.parse(core.getInput('protocol'));
+            printBanner();
+            const required = { required: true };
+            const protocol = classes_1.Protocols.parse(core.getInput('protocol', required));
             const useTLS = protocol === classes_1.Protocols.SMTPS; // TODO : convert this to a enum type, should also handle casing issues
-            const remoteHost = core.getInput('remote-host');
-            const remotePort = core.getInput('remote-port');
-            core.debug(`Connecting to '${remoteHost}' on port '${remotePort}' ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+            const remoteHost = core.getInput('remote-host', required);
+            const remotePort = core.getInput('remote-port', required);
+            const ep = new classes_1.Endpoint(remoteHost, parseInt(remotePort, 10));
+            core.debug(`Connecting to '${ep.host}' on port '${ep.port}' ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
             const username = core.getInput('username');
             const password = core.getInput('password');
-            const from = core.getInput('smtp-from');
-            const to = core.getInput('smtp-to');
+            const from = core.getInput('smtp-from', required);
+            const to = core.getInput('smtp-to', required);
             if (!from) {
                 throw new Error('from not a valid string');
             }
             if (!to) {
                 throw new Error('to not a valid string');
             }
-            const ep = new classes_1.Endpoint(remoteHost, parseInt(remotePort, 10));
-            const globber = yield glob.create('output/**/*.*', {
-                followSymbolicLinks: false
+            core.startGroup('Connection Info');
+            core.info(`${colorizer_1.Colorizer.GRAY}Protocol:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${protocol}${colorizer_1.Colorizer.OFF}`);
+            let formattedUsername = 'Something Falsy';
+            if (username) {
+                formattedUsername = username;
+            }
+            core.info(`${colorizer_1.Colorizer.GRAY}Username:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${formattedUsername}${colorizer_1.Colorizer.OFF}`);
+            let formattedPassword = 'Something Falsy';
+            if (password) {
+                formattedPassword = '<redacted>';
+            }
+            core.info(`${colorizer_1.Colorizer.GRAY}Password:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${formattedPassword}${colorizer_1.Colorizer.OFF}`);
+            core.info(`${colorizer_1.Colorizer.GRAY}Remote Host:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.host}${colorizer_1.Colorizer.OFF}`);
+            core.info(`${colorizer_1.Colorizer.GRAY}Remote Port:${colorizer_1.Colorizer.OFF} ${colorizer_1.Colorizer.RED}${ep.port}${colorizer_1.Colorizer.OFF}`);
+            core.endGroup();
+            const fileGlobs = core.getMultilineInput('files', required);
+            const globber = yield glob.create(fileGlobs.join('\n'), {
+                followSymbolicLinks: false // in prep for sftp, do not follow symlinks
             });
             const attachments = [];
             try {
@@ -117,7 +161,9 @@ function run() {
                     _d = false;
                     try {
                         const file = _c;
-                        attachments.push({ path: file });
+                        if (fs.statSync(file).isFile()) {
+                            attachments.push({ path: file });
+                        }
                     }
                     finally {
                         _d = true;
@@ -135,7 +181,7 @@ function run() {
             const message = {
                 from,
                 to,
-                subject: `[${github.context.repo}] Here is your QuickSend File Transfer`,
+                subject: `[${github.context.repo.owner}/${github.context.repo.repo}] Here is your QuickSend File Transfer`,
                 text: 'See attached',
                 attachments
             };
@@ -148,6 +194,18 @@ function run() {
     });
 }
 run();
+function printBanner() {
+    core.info(`------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+    core.info(`Thanks for using ${text_effects_1.TextEffects.BOLD}${colorizer_1.Colorizer.GREEN}QuickSend File Transfer${colorizer_1.Colorizer.OFF}. We'll get those files where you need need them as fast as ethernet, fiber optics, and radio waves will carry them! 🚀`);
+    core.info(`------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+    core.info(`👀 Interested in saving time in the future? Watch the repository to get notified about new releases! --> https://github.com/cskwrd/quick-send-action/subscription`);
+    core.info(`🌟 Want to ${colorizer_1.Colorizer.YELLOW}spend less time waiting${colorizer_1.Colorizer.OFF} on friends or co-workers? Star the repo to and expose them to QuickSend! --> https://github.com/cskwrd/quick-send-action`);
+    core.info(`❓ Have a question? Start a discussion! --> https://github.com/cskwrd/quick-send-action/discussions`);
+    core.info(`🐛 Found a bug? ${text_effects_1.TextEffects.BOLD}${colorizer_1.Colorizer.BLACK}IMPOSSIBLE! Haha, just kidding.${colorizer_1.Colorizer.OFF} Open an issue! --> https://github.com/cskwrd/quick-send-action/issues`);
+    core.info(`------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+    core.info(`📦 Version: ${process.env.GITHUB_ACTION_REF}`);
+    core.info(`------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------`);
+}
 
 
 /***/ }),
@@ -204,23 +262,22 @@ function smtp(useTLS, endpoint, username, password, payload) {
         if (isNaN(endpoint.port)) {
             throw new Error('port not a number');
         }
-        if (!username) {
-            throw new Error('username not a string');
+        let authObj = undefined;
+        if (username || password) {
+            authObj = {
+                user: username,
+                pass: password
+            };
         }
-        if (!password) {
-            throw new Error('password not a string');
-        }
-        // auth is not yet implemented because
-        // haraka forces use of tls when authentication is used
-        // and i haven't worked out setting up tls in the workflow yet
-        // const auth = {
-        //   user: username,
-        //   pass: password
-        // }
         const transporter = nodemailer_1.default.createTransport({
             host: endpoint.host,
             port: endpoint.port,
-            secure: useTLS // will auto-upgrade later with STARTTLS, if server supports it
+            secure: useTLS,
+            auth: authObj,
+            tls: {
+                // do not fail on invalid certs if connecting to localhost... well strings that start with '127'
+                rejectUnauthorized: !endpoint.host.startsWith('127')
+            }
         });
         // verify connection configuration
         transporter.verify(function (error) {
@@ -237,6 +294,25 @@ function smtp(useTLS, endpoint, username, password, payload) {
     });
 }
 exports.smtp = smtp;
+
+
+/***/ }),
+
+/***/ 6972:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TextEffects = void 0;
+exports.TextEffects = {
+    BOLD: '\x1b[1m',
+    DIM: '\x1b[2m',
+    UNDERSCORE: '\x1b[4m',
+    BLINK: '\x1b[5m',
+    REVERSE: '\x1b[7m',
+    HIDDEN: '\x1b[8m'
+};
 
 
 /***/ }),

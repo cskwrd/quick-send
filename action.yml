@@ -23,6 +23,12 @@ inputs:
   smtp-to:
     required: true
     description: 'The email address that should be placed in the TO field.'
+  files:
+    required: true
+    description: 'List of file glob patterns selecting files to transfer.'
 runs:
   using: 'node16'
   main: 'dist/index.js'
+branding:
+  icon: 'send'
+  color: 'green'
