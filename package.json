@@ -1,6 +1,6 @@
 {
   "name": "quick-send-action",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "description": "Need to run tests in production? Tired of finding your files here when you need them there? Fear not! The QuickSend GitHub Action sends your things when and where you need them.",
   "main": "lib/main.js",
